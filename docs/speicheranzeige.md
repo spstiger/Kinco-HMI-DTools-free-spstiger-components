@@ -9,10 +9,14 @@ Systemregister und funktionieren in jedem Projekt ohne SPS.
 
 | RAM | Flash | Größen |
 |---|---|---|
-| `ram_64_*`, `ram_128_*`, `ram_256_*` | `flash_128_*`, `flash_256_*` | `_S` 256 × 64, `_M` 384 × 96, `_L` 512 × 128 px |
+| `ram_64_*`, `ram_128_*`, `ram_256_*`, `ram_512_*` | `flash_128_*`, `flash_256_*`, `flash_4096_*` | `_S` 256 × 64, `_M` 384 × 96, `_L` 512 × 128, `_XL` 896 × 224 px |
 
 Welche Speichergröße euer Gerät hat, steht im Datenblatt. Die Variante muss dazu passen, denn
 Balkenlänge und Stellenzahl richten sich danach. Ist sie zu klein, zeigt die Zahl `**.*`.
+
+`flash_4096_*` ist für Geräte mit 4 GB Flash (z. B. GT2156E). Das Register LW9036 ist 32 Bit breit und
+zählt höchstens 4 294 967 295 Byte, 1 Byte weniger als 4 GB. Darum endet der Balken bei diesem Wert,
+der freie Speicher wird weiter in MB angezeigt.
 
 ## RAM-Anzeige
 

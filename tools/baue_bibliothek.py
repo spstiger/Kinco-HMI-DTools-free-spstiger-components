@@ -75,7 +75,11 @@ def rgba(c, a=255):
 
 
 # --------------------------------------------------------------------------------------------- Schrift
-RESERVE_W, RESERVE_W_PCT, RESERVE_H, BOX_EXTRA, BOLD_EXTRA = 4, 0.04, 4, 7, 0.09
+RESERVE_W, RESERVE_W_PCT, BOX_EXTRA, BOLD_EXTRA = 4, 0.04, 7, 0.09
+# Keine Höhenreserve: DTools setzt statischen Text senkrecht MITTIG in seine Box und schreibt beim Einfügen/Speichern
+# selbst Boxen mit 1,53 × pt + 2. Eine höhere Box schiebt den Text nach unten (4 px Reserve = 2 px tiefer, gemessen
+# 24.10.2026: Generator-Boxen +3 statt +1 zur Zahlenanzeige). Mit DTools-Höhe gilt ZAHL_DY = 1 überall.
+RESERVE_H = 0
 _FONTS = {}
 
 
@@ -106,6 +110,8 @@ GROESSEN = {
     "S": dict(w=256, h=64, pad=12, titel_y=8, titel_pt=11, text_pt=11, bar_y=36, bar_h=16, leg_y=None),
     "M": dict(w=384, h=96, pad=16, titel_y=10, titel_pt=14, text_pt=10, bar_y=42, bar_h=20, leg_y=66),
     "L": dict(w=512, h=128, pad=20, titel_y=14, titel_pt=18, text_pt=14, bar_y=56, bar_h=28, leg_y=92),
+    # XL = L × 1,75 für 1920 × 1080 (GT2156E, Basisprojekt skaliert mit 1,75 – Steffen 24.10.2026)
+    "XL": dict(w=896, h=224, pad=35, titel_y=24, titel_pt=32, text_pt=24, bar_y=98, bar_h=49, leg_y=161),
 }
 AKZENT_W = 4          # Akzentlinie links (Signaturelement)
 RADIUS = 6
@@ -323,8 +329,9 @@ class Bibliothek:
         g = GROESSEN[gr]
         w, h, pad = g["w"], g["h"], g["pad"]
         x0, x1 = AKZENT_W + pad, w - pad
-        roh = mb * 1024 * 1024
+        roh = min(mb * 1024 * 1024, 2 ** 32 - 1)     # Register 32 Bit: 4 GB = 1 Byte weniger
         stellen = len(str(mb))
+        kapazitaet = f"{mb // 1024} GB" if mb >= 1024 else f"{mb} MB"
         frei_reg = 9134 if art == "ram" else 9036
         titel = "RAM" if art == "ram" else "Flash"
 
@@ -332,7 +339,7 @@ class Bibliothek:
         # Kopfzeile: Titel + Kapazität
         t, x = self.text(x0, g["titel_y"], titel, g["titel_pt"], TEXT, fett=True)
         teile.append(t)
-        teile.append(self.text(x + round(g["titel_pt"] * 0.6), g["titel_y"], f"{mb} MB", g["titel_pt"], TEXT2)[0])
+        teile.append(self.text(x + round(g["titel_pt"] * 0.6), g["titel_y"], kapazitaet, g["titel_pt"], TEXT2)[0])
 
         # Balken: Spur in der Karte, darüber die Bauteile
         bw = x1 - x0
@@ -393,7 +400,7 @@ class Bibliothek:
             teile.append(self.zahl(x + round(g["titel_pt"] * 0.6), g["titel_y"], 9140, worte=1, max_roh=32,
                                    max_anzeige=100, stellen=3, nachkomma=0, einheit="%", pt=g["titel_pt"],
                                    farbe=TEXT2)[0])
-            tg = 48 if gr == "M" else 56
+            tg = {"M": 48, "L": 56, "XL": 98}[gr]
             ty = h - pad + 4 - tg
         minus = self.grafik(f"sp_taste_minus_{tg}", self.taste(tg, tg, "-"))
         plus = self.grafik(f"sp_taste_plus_{tg}", self.taste(tg, tg, "+"))
@@ -418,7 +425,7 @@ class Bibliothek:
         self.gruppe(f"brightness_{gr}", w, h, teile)
 
     def logo_komponente(self, gr):
-        breite = {"S": 160, "M": 240, "L": 320}[gr]
+        breite = {"S": 160, "M": 240, "L": 320, "XL": 560}[gr]
         # S ohne Claim: „WWW.SPSTIGER.DE“ wäre bei 160 px nicht mehr lesbar (Design-System: logo-standard)
         datei = "logo-standard.png" if gr == "S" else "logo-original.png"
         lg = self.grafik(f"sp_logo_{gr}", self.logo(datei, breite=breite))
@@ -426,7 +433,7 @@ class Bibliothek:
         self.gruppe(f"spstiger_logo_{gr}", w, h, [self.bitmap(0, 0, lg)])
 
     def bildschirmschoner(self, gr):
-        hoehe = {"S": 96, "M": 137, "L": 192}[gr]
+        hoehe = {"S": 96, "M": 137, "L": 192, "XL": 336}[gr]
         kopf = self.grafik(f"sp_tigerkopf_{gr}", self.logo("tigerkopf-orange.png", hoehe=hoehe))
         w, h = self.grafiken[kopf][0][0].size
         tm0, tm1 = self.v.teil("screen_saver_logo", "TM0"), self.v.teil("screen_saver_logo", "TM1")
@@ -438,21 +445,21 @@ class Bibliothek:
         _position(mv, 60, 0, w, h)
         self.gruppe(f"screen_saver_logo_{gr}", 60 + w, max(h, 106), [tm1, tm0, mv])
 
-    def kalibrierung(self):
+    def kalibrierung(self, KAL_DY=range(-1, 6)):
         """Testkomponente für den Versatz zwischen statischem Text und Zahlenanzeige (nicht für das Release).
-        Je Schriftgröße: statisch „88“ direkt vor einer Zahlenanzeige, diese um dy = −3 … +3 px verschoben.
+        Je Schriftgröße: statisch „88“ direkt vor einer Zahlenanzeige, diese um dy = −1 … +5 px verschoben (G100E2: +1, M2070HE: mehr).
         Zeile „Size“: alte Pixelschrift-Größe 8/16/24/32 bei 14 pt. Unten: Text über Zahl für den linken Rand.
         Zahlenanzeigen mit sichtbarem Rahmen (Silver Chalice), damit ihre Box im Screenshot erkennbar ist."""
         teile = []
         zahl = dict(register=9134, worte=2, max_roh=256 * 1024 * 1024, max_anzeige=256, stellen=3, nachkomma=1,
                     einheit="MB", rahmen=F["silver_chalice"])
         x0, dx_spalte = 70, 126
-        for i, dy in enumerate(range(-3, 4)):
+        for i, dy in enumerate(KAL_DY):
             teile.append(self.text(x0 + i * dx_spalte, 4, f"dy {dy:+d}", 9, TEXT2)[0])
         y = 30
         for pt in (10, 11, 14, 18):
             teile.append(self.text(6, y, f"{pt} pt", 9, TEXT2)[0])
-            for i, dy in enumerate(range(-3, 4)):
+            for i, dy in enumerate(KAL_DY):
                 t, xe = self.text(x0 + i * dx_spalte, y, "88", pt)
                 teile.append(t)
                 teile.append(self.zahl(xe + 3, y + dy, pt=pt, korrektur=False, **zahl)[0])
@@ -581,18 +588,18 @@ def pruefen():
 
 def main(kalibrierung=False):
     b = Bibliothek()
-    for art, groessen in (("ram", (64, 128, 256)), ("flash", (128, 256))):
+    for art, groessen in (("ram", (64, 128, 256, 512)), ("flash", (128, 256, 4096))):
         for mb in groessen:
-            for gr in "SML":
+            for gr in GROESSEN:
                 b.speicher(art, mb, gr)
     b.vg("sp_regler_spur", vg_rechtecke("sp_regler_spur", [(0, 42, 99, 57, F["mercury"]), (0, 0, 99, 99, KARTE)]))
     b.vg("sp_regler_knopf", vg_rechtecke("sp_regler_knopf", [(44, 25, 55, 74, F["black_haze"]),
                                                               (0, 0, 99, 99, F["cathams_blue"])]))
-    for gr in "SML":
+    for gr in GROESSEN:
         b.helligkeit(gr)
-    for gr in "SML":
+    for gr in GROESSEN:
         b.logo_komponente(gr)
-    for gr in "SML":
+    for gr in GROESSEN:
         b.bildschirmschoner(gr)
     if kalibrierung:
         b.kalibrierung()

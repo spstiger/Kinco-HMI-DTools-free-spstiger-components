@@ -1,0 +1,21 @@
+# Von DTools beim Speichern/Kompilieren erzeugt
+temp/
+tar/
+~backup/
+*.pkgx
+*.bak
+*.dat~
+current_project_name_file.csv
+frw*.frp
+*.SIM~
+
+# Legt DTools in Bibliotheksordnern an (leer)
+macro/
+submacro/
+
+# Release-Build (lokal)
+dist/
+
+# Windows
+Thumbs.db
+desktop.ini

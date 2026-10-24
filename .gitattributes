@@ -1,0 +1,14 @@
+# DTools schreibt Bibliotheks- und Grafikdateien mit CRLF.
+# So bleiben sie auch im Release-ZIP (gebaut auf Linux) im Originalformat.
+*.pgl text eol=crlf
+*.vg  text eol=crlf
+*.bg  text eol=crlf
+
+# Update-Skript für Windows
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+
+# Verschlüsselte DTools-Projektdateien nie anfassen
+*.dpj binary
+*.whe binary
+*.lg  binary

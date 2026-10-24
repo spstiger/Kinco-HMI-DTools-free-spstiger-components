@@ -81,8 +81,7 @@ Der Klon enthält zusätzlich Beispielprojekt und Anleitungen; DTools ignoriert 
 1. DTools starten.
 2. Rechtsklick auf eine freie Fläche → **Eigene Komponenten → Eigene Komponenten nutzen**.
 3. In der Liste der Komponentenbibliotheken **spstiger-free-dtools-components** wählen.
-
-![Eigene Komponenten in DTools](bilder/dtools-eigene-komponenten.png)
+4. Komponente anklicken und einfügen. Welche es gibt: [README](../README.md#enthaltene-komponenten).
 
 ## Windows-Warnung „Herausgeber konnte nicht verifiziert werden“
 

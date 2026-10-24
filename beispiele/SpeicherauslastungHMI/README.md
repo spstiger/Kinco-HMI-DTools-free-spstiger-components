@@ -3,6 +3,9 @@
 DTools-V4-Projekt für ein **MK070E** mit allen Speicheranzeigen der Bibliothek
 (`ram_64`, `ram_128`, `ram_256`, `flash_128`, `flash_256`) im Hauptfenster.
 
+> Das Projekt zeigt noch das Design von **Version 1** der Bibliothek. Die aktuellen Komponenten im
+> spstiger-Design (Größen S/M/L) fügt ihr aus der Bibliothek ein, siehe [README](../../README.md).
+
 Öffnen: `SpeicherauslastungHMI.dpj` in Kinco DTools V4. Für ein anderes Gerät in DTools den HMI-Typ
 umstellen und die passende Anzeige für die Speichergröße des Geräts behalten.
 

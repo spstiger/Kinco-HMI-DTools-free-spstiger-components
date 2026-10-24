@@ -1,100 +1,71 @@
-# Komponente Speicherauslastung (RAM / Flash)
+# Speicheranzeige RAM und Flash
 
-Diese Komponenten zeigen die Speicherauslastung (RAM und Flash) eines Kinco-HMIs an.
-Erstellt wurden sie auf einem **MK070E**; sie lassen sich auf andere Modelle übertragen.
-Das komplette Beispielprojekt liegt unter [`beispiele/SpeicherauslastungHMI`](../beispiele/SpeicherauslastungHMI).
+Die Komponenten `ram_*` und `flash_*` zeigen die Speicherauslastung eines Kinco-HMIs. Sie lesen nur
+Systemregister und funktionieren in jedem Projekt ohne SPS.
 
-## Aufbau
+![RAM 256 MB in den Größen S, M und L](bilder/readme-groessen.png)
 
-Im **Fenster 0 (Hauptfenster)** des Beispiels stehen fünf Anzeigen für unterschiedliche Speichergrößen:
+## Varianten
 
-- **RAM:** 64 MB, 128 MB, 256 MB (`ram_64`, `ram_128`, `ram_256`)
-- **Flash:** 128 MB, 256 MB (`flash_128`, `flash_256`)
+| RAM | Flash | Größen |
+|---|---|---|
+| `ram_64_*`, `ram_128_*`, `ram_256_*` | `flash_128_*`, `flash_256_*` | `_S` 256 × 64, `_M` 384 × 96, `_L` 512 × 128 px |
 
-Jede Anzeige zeigt grafisch, wie viel Speicher der Benutzer und das System belegen und wie viel frei ist.
-
-![Speicheranzeigen im Beispielprojekt](bilder/speicheranzeige-uebersicht.png)
+Welche Speichergröße euer Gerät hat, steht im Datenblatt. Die Variante muss dazu passen, denn
+Balkenlänge und Stellenzahl richten sich danach. Ist sie zu klein, zeigt die Zahl `**.*`.
 
 ## RAM-Anzeige
 
-Beim Erstellen eines Projekts in DTools belegen **Bilder, Tabellen, Schriften und grafische
-Komponenten** RAM. Das HMI lädt beim Start alle benötigten Ressourcen in den Arbeitsspeicher,
-damit die Darstellung flüssig und die Reaktion schnell ist. Je mehr Grafiken oder große Bitmaps
-ein Projekt nutzt, desto mehr RAM ist belegt – unabhängig von der Gerätegröße.
+Der Balken zeigt drei Bereiche:
 
-### Typische Speicherverbraucher
-
-| Elementtyp | Beschreibung | Einfluss auf RAM |
+| Farbe | Bereich | Quelle |
 |---|---|---|
-| **Bilder / Bitmaps** | Hintergründe, Icons, Logos, Farbverläufe | hoch – werden vollständig in den RAM geladen |
-| **Tabellen / Data Tables** | Datensätze wie Rezepte oder Parameterlisten | mittel bis hoch |
-| **Schriften** | jede weitere Schrift oder Größe belegt Speicher | mittel |
-| **Makros / Skripte** | Steuerlogik und interne Abläufe | gering bis mittel |
-| **Balken, Zeigerinstrumente, Trends** | grafische Elemente mit Animation oder Aktualisierung | mittel |
-| **Kommunikationsvariablen** | häufig aktualisierte Modbus-Register | gering, summiert sich bei vielen |
+| Cathams Blue `#194B6F` | **Projekt**: vom Projekt belegter RAM | LW9136–9137 (2 Words, Byte) |
+| Pale Cerulean `#A9C6D9` | **System**: der Rest dazwischen | ergibt sich aus Gesamt − Projekt − frei |
+| Mercury `#E2E3E4` | **frei** | LW9134–9135 (2 Words, Byte) |
 
-### Benutzter RAM (Benutzer)
+Aufbau in DTools: Eine Bitmap bildet die Karte und den Balkenhintergrund in der System-Farbe. Darüber
+liegen zwei Balken-Bauteile: „Projekt“ wächst vom linken Rand nach rechts, „frei“ vom rechten Rand
+nach links. Was dazwischen sichtbar bleibt, ist der vom System belegte Bereich.
 
-Balkendiagramm und Zahlenanzeige lesen dasselbe Systemregister:
+Die Zahlenanzeigen rechnen Byte in MB um (Wertebereich 0 … RAM in Byte → 0 … RAM in MB, eine
+Nachkommastelle) und sind reine Anzeigen ohne Eingabe.
 
-- **Systemregister:** LW9136
-- **Datentyp:** 2 Words (32 Bit ohne Vorzeichen)
-- **Ausrichtung:** rechts (Balken wächst nach links)
-- **Wertebereich:** 0 bis RAM-Größe in Byte
+### Was belegt RAM?
 
-![Adresse LW9136 im Balkendiagramm](bilder/ram-benutzt-adresse.png)
+Beim Start lädt das HMI alle Ressourcen in den Arbeitsspeicher, damit die Darstellung flüssig bleibt.
 
-![Wertebereich des Balkendiagramms](bilder/ram-balken-wertebereich.png)
-
-| RAM-Größe | Maximalwert (Byte) |
+| Elementtyp | Einfluss auf RAM |
 |---|---|
-| 64 MB | 67 108 864 |
-| 128 MB | 134 217 728 |
-| 256 MB | 268 435 456 |
-
-### Freier RAM
-
-- **Systemregister:** LW9134
-- **Datentyp:** 2 Words (32 Bit ohne Vorzeichen)
-- **Ausrichtung:** links (Balken wächst nach rechts)
-
-![Balkendiagramm für freien RAM](bilder/ram-frei-balken.png)
-
-Beide Balkendiagramme liegen **übereinander auf einer Bitmap**, die den vom System belegten Bereich
-darstellt. So entsteht eine dreifarbige Anzeige:
-
-- **Orange:** vom Benutzer belegter RAM
-- **Blau:** vom System belegter RAM
-- **Grün:** freier RAM
-
-### Zahlenanzeigen in MB
-
-Unter dem Diagramm zeigen Zahlenanzeigen LW9136 (belegt) und LW9134 (frei). Sie sind so skaliert,
-dass sie Megabyte statt Byte anzeigen:
-
-| Gerät | Unterer Wert | Oberer Wert |
-|---|---|---|
-| 64 MB | 0 | 64 |
-| 128 MB | 0 | 128 |
-| 256 MB | 0 | 256 |
-
-![Skalierung der Zahlenanzeige](bilder/zahlenanzeige-skalierung.png)
-
-Damit steht dort z. B. „27.4“ (MB frei) oder „12.8“ (MB belegt).
+| Bilder und Bitmaps (Hintergründe, Icons, Logos) | hoch – werden vollständig geladen |
+| Tabellen, Rezepte, Parameterlisten | mittel bis hoch |
+| Schriften (jede Schrift und Größe) | mittel |
+| Balken, Zeiger, Trends | mittel |
+| Makros und Skripte | gering bis mittel |
+| Kommunikationsvariablen | gering, summiert sich bei vielen |
 
 ## Flash-Anzeige
 
-Anders als beim RAM gibt es im Flash **keinen eigenen Systemanteil**: Betriebssystem und
-HMI-Runtime nutzen den Flash im Betrieb nicht aktiv, sondern nur zum Speichern und Laden von Dateien.
+Im Flash gibt es keinen eigenen Systemanteil, Betriebssystem und Runtime nutzen ihn nur zum Speichern
+und Laden von Dateien. Darum zeigt die Anzeige zwei Bereiche:
 
-- **Systemregister:** LW9036 (freier Flash)
-- **Zahlenanzeige:** verbleibender Flash in MB
-- **Balkendiagramm:** belegter Flash, auf einer Bitmap, die den gesamten Flash darstellt
+| Farbe | Bereich | Quelle |
+|---|---|---|
+| Cathams Blue | **belegt** | Gesamt − frei |
+| Mercury | **frei** | LW9036–9037 (2 Words, Byte) |
 
-Kinco-HMIs haben in der Regel 128 MB oder 256 MB Flash, darum gibt es zwei Varianten.
+## Warnung bei wenig Speicher
 
-## Anpassen
+Fällt der freie Speicher unter 10 %, färbt sich der freie Teil des Balkens orange. Umgesetzt ist das
+über die untere Alarmgrenze des Balkens (`AlarmMinValue`). Orange ist im spstiger-Design die
+Signalfarbe und kommt in den Komponenten sonst nicht vor.
 
-- Die Adressen LW9134, LW9136 und LW9036 sind Systemregister und gelten in jedem Projekt.
-- Farben lassen sich im Balkendiagramm-Editor ändern.
-- Welche Speichergröße euer Gerät hat, steht im Datenblatt des HMIs.
+## Design
+
+- Farben aus der spstiger-Palette, Akzentlinie links in Cathams Blue, Karte in Black Haze
+- Schrift Arial: Inter, die spstiger-Hausschrift, ist auf dem Panel nicht verfügbar
+- Zahlen stehen auf einer Linie mit dem Text davor. DTools zeichnet Zahlenanzeigen 1 px höher als
+  statischen Text, die Komponenten gleichen das aus (gemessen in Simulation und auf dem G100E2).
+
+Erzeugt werden die Komponenten von [tools/baue_bibliothek.py](../tools/baue_bibliothek.py). Größen,
+Abstände und Farben stehen dort. Änderungen in DTools würden beim nächsten Lauf überschrieben.

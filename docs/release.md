@@ -1,16 +1,32 @@
-# Neue Version veröffentlichen (für spstiger)
+# Komponenten ändern und neue Version veröffentlichen (für spstiger)
 
 ## Komponenten bearbeiten
 
-Am einfachsten arbeitet man direkt im Git-Klon im `usrlib`-Ordner
-(siehe [Installation, Weg C](installation.md#weg-c--github-desktop-für-entwickler)):
+Seit Version 2.0 erzeugt [`tools/baue_bibliothek.py`](../tools/baue_bibliothek.py) die komplette
+Bibliothek: `.pgl`, `vg/` und `image/`. **Nicht in DTools in der Bibliothek speichern** – der nächste
+Lauf überschreibt das. Größen, Abstände, Farben und neue Komponenten kommen ins Skript.
 
-1. In DTools die Komponente bauen, gruppieren und über **Eigene Komponenten speichern** in die
-   Bibliothek **spstiger-free-dtools-components** speichern. DTools ändert dabei direkt die
-   `.pgl` und legt neue Grafiken in `vg/` und `image/` ab.
-2. DTools schließen.
-3. In GitHub Desktop die Änderungen prüfen. Nur Dateien der Bibliothek (`.pgl`, `vg/`, `image/`)
-   und ggf. Doku committen.
+```
+python tools/baue_bibliothek.py
+python tools/vorschau_bibliothek.py
+python tools/vorschau_bibliothek.py --readme
+```
+
+1. Skript ändern und ausführen. Es prüft am Ende Namen, Lage der Bauteile und Bildgrößen.
+2. `docs/bilder/komponenten-uebersicht.png` ansehen (grobe Vorschau aus dem XML). Bei Änderungen am
+   Aussehen auch die README-Bilder neu erzeugen.
+3. In DTools testen. Über den Git-Klon oder die Junction in `usrlib` sieht DTools die neue Fassung
+   sofort, es lädt die Bibliothek bei jedem Aufruf von **Eigene Komponenten nutzen** neu.
+4. Auf dem Gerät prüfen. Simulation und Gerät rendern Text unterschiedlich breit.
+
+Voraussetzung: Python 3 mit Pillow (`pip install pillow`) unter Windows, das Skript misst Texte mit
+der Arial aus `C:\Windows\Fonts`. Bauvorlagen für die DTools-Bauteile liegen in `tools/vorlagen/`.
+
+**Textversatz neu messen** (andere DTools-Version oder anderes Gerät):
+`python tools/baue_bibliothek.py --kalibrierung` erzeugt zusätzlich die Komponente
+`_kalibrierung_textversatz`. Sie bei x 0 / y 0 einfügen, die Simulation starten, einen Screenshot
+machen und mit `python tools/messe_textversatz.py screenshot.png` auswerten. Das Ergebnis kommt nach
+`ZAHL_DY`. Vor dem Release ohne `--kalibrierung` neu bauen.
 
 Komponentennamen nicht nachträglich umbenennen – Kunden suchen sie unter dem bekannten Namen.
 

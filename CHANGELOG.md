@@ -6,6 +6,19 @@ Neue Einträge oben. Die Überschrift muss genau `## <Version>` lauten – der R
 > Hinweis für alle Versionen: Komponenten, die schon in einem Projekt eingefügt sind, ändern sich
 > durch ein Update der Bibliothek nicht. Wer die neue Fassung möchte, fügt die Komponente neu ein.
 
+## 2.1.0
+
+Neue Größe XL und neue Speichervarianten für große Geräte wie das GT2156E (1920 × 1080).
+
+- **Größe XL** für alle Komponenten: `_XL` 896 × 224 px (L × 1,75), Helligkeitstasten 98 px.
+  `spstiger_logo_XL` 560 px breit, `screen_saver_logo_XL` 336 px hoch.
+- **RAM 512 MB:** `ram_512_S/M/L/XL`
+- **Flash 4 GB:** `flash_4096_S/M/L/XL`, Titel „4 GB“, freier Speicher in MB. Das Systemregister
+  LW9036 ist 32 Bit breit und reicht bis 4 294 967 295 Byte – das ist der Höchstwert des Balkens.
+- **Ausrichtung:** Texte stehen jetzt in Boxen so hoch, wie DTools sie selbst anlegt. Vorher saßen
+  sie 2 px tiefer, die Zahlen wirkten dadurch zu hoch (gemessen in der Simulation).
+- 40 Komponenten statt 24.
+
 ## 2.0.0
 
 Alle Komponenten neu im spstiger-Design und in drei Größen. Die bisherigen Komponenten sind ersetzt.

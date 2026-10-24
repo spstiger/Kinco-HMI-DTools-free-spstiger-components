@@ -2,30 +2,31 @@
 
 Fertige Komponenten für **Kinco DTools V4** (MK-, GT-, GL- und G-Serie): Speicheranzeigen für RAM und
 Flash, Helligkeitsregler und spstiger-Logos. Ihr fügt sie per Rechtsklick in eure HMI-Projekte ein,
-jede in drei Größen.
+jede in vier Größen.
 
 ![Komponenten auf einem 10-Zoll-Panel mit 1024 × 600 px](docs/bilder/readme-panel.png)
 
-## Drei Größen
+## Vier Größen
 
-Für jedes Panel die passende Größe: **S** für Statuszeilen, **M** für normale Bilder, **L** für
-Diagnoseseiten und große Displays.
+Für jedes Panel die passende Größe: **S** für Statuszeilen und kleine Displays, **M** für normale
+Bilder, **L** für Diagnoseseiten und 10-Zoll-Displays, **XL** für Full-HD-Panels wie das GT2156E.
 
 ![Größenvergleich S, M und L](docs/bilder/readme-groessen.png)
 
 ## Enthaltene Komponenten
 
-Jede Komponente gibt es mit Endung `_S` (256 × 64 px), `_M` (384 × 96 px) und `_L` (512 × 128 px).
+Jede Komponente gibt es mit Endung `_S` (256 × 64 px), `_M` (384 × 96 px), `_L` (512 × 128 px) und
+`_XL` (896 × 224 px).
 
 | Komponente | Zeigt | Register |
 |---|---|---|
-| `ram_64_*`, `ram_128_*`, `ram_256_*` | RAM: Projekt, System und frei als Balken, Werte in MB | LW9136 (Projekt), LW9134 (frei) |
-| `flash_128_*`, `flash_256_*` | Flash: belegt und frei | LW9036 (frei) |
+| `ram_64_*`, `ram_128_*`, `ram_256_*`, `ram_512_*` | RAM: Projekt, System und frei als Balken, Werte in MB | LW9136 (Projekt), LW9134 (frei) |
+| `flash_128_*`, `flash_256_*`, `flash_4096_*` | Flash: belegt und frei (`flash_4096` = 4 GB) | LW9036 (frei) |
 | `brightness_*` | Display-Helligkeit mit − / Regler / +, ab M mit Prozentwert | LW9140 (0–32) |
-| `spstiger_logo_*` | spstiger-Logo (S ohne Claim, M und L mit www.spstiger.de) | – |
+| `spstiger_logo_*` | spstiger-Logo (S ohne Claim, M, L und XL mit www.spstiger.de) | – |
 | `screen_saver_logo_*` | Bewegter Tigerkopf für einen Bildschirmschoner | LW2000–LW2002 |
 
-[Alle 24 Komponenten auf einen Blick](docs/bilder/komponenten-uebersicht.png)
+[Alle 40 Komponenten auf einen Blick](docs/bilder/komponenten-uebersicht.png)
 
 **Die richtige Speichervariante wählen:** RAM und Flash eures Geräts stehen im Datenblatt. Ist die
 Variante zu klein, zeigt die Anzeige `**.*`, z. B. `ram_64` auf einem Gerät mit 256 MB RAM.

@@ -1,0 +1,38 @@
+spstiger-Komponentenbibliothek für Kinco DTools V4 – Updater
+=============================================================
+
+Was macht der Updater?
+  Er lädt die neueste Version der kostenlosen spstiger-Komponenten von GitHub
+  und installiert sie in alle Kinco-DTools-V4-Installationen unter C:\Kinco.
+  Eine vorhandene ältere Fassung wird vorher gesichert nach
+  %LOCALAPPDATA%\spstiger\DTools-Bibliothek\Sicherung
+
+So geht's
+  1. Kinco DTools schließen.
+  2. spstiger-Bibliothek-aktualisieren.cmd doppelklicken.
+  3. In DTools: Rechtsklick > Eigene Komponenten > Eigene Komponenten nutzen
+     > Bibliothek "spstiger-free-dtools-components" wählen.
+
+Spätere Updates
+  Den Updater NICHT neu herunterladen – einfach erneut starten.
+  Er holt jedes Mal selbst die neueste Version. Ist schon alles aktuell,
+  ändert er nichts. Am besten diesen Ordner an einem festen Ort aufbewahren
+  (z. B. Dokumente\spstiger).
+
+Windows-Warnung "Herausgeber konnte nicht verifiziert werden"
+  Windows warnt bei jeder Datei aus dem Internet, die nicht digital signiert
+  ist. Entweder einmal auf "Ausführen" klicken – oder die Warnung vermeiden:
+  Die heruntergeladene ZIP-Datei VOR dem Entpacken mit Rechtsklick >
+  Eigenschaften öffnen, unten bei "Sicherheit" den Haken "Zulassen" setzen,
+  OK, dann entpacken.
+
+Wichtig
+  Komponenten, die schon in einem Projekt eingefügt sind, ändern sich durch
+  ein Update nicht. Wer die neue Fassung möchte, fügt die Komponente neu ein.
+
+Hilfe bei Problemen (keine Schreibrechte, DTools nicht unter C:\Kinco,
+kein Internet am Rechner …):
+  https://github.com/spstiger/Kinco-HMI-DTools-free-spstiger-components/blob/main/docs/installation.md
+
+Lizenz: MIT (siehe LICENSE) – kostenlos, ohne Gewähr.
+spstiger GmbH – https://www.spstiger.de

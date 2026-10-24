@@ -11,7 +11,7 @@
 
     Ergebnis in dist\:
       spstiger-free-DTools-components.zip   – nur die Bibliothek (Ordner für usrlib)
-      spstiger-Bibliothek-Updater.zip       – Update-Skript für Kunden
+      spstiger-Bibliothek-Updater.zip       – Update-Skript für Kunden (mit LIESMICH.txt)
       release-notes.md                      – Abschnitt aus CHANGELOG.md
 
     Läuft lokal und im GitHub-Workflow (.github\workflows\release.yml).
@@ -72,7 +72,7 @@ Copy-Item -LiteralPath (Join-Path $root 'vg'), (Join-Path $root 'image') -Destin
 
 $upd = Join-Path $dist 'staging\updater'
 New-Item -ItemType Directory -Path $upd | Out-Null
-Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Update-spstigerBibliothek.ps1'), (Join-Path $PSScriptRoot 'spstiger-Bibliothek-aktualisieren.cmd'), (Join-Path $root 'LICENSE') -Destination $upd
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Update-spstigerBibliothek.ps1'), (Join-Path $PSScriptRoot 'spstiger-Bibliothek-aktualisieren.cmd'), (Join-Path $PSScriptRoot 'LIESMICH.txt'), (Join-Path $root 'LICENSE') -Destination $upd
 [IO.Compression.ZipFile]::CreateFromDirectory($upd, (Join-Path $dist 'spstiger-Bibliothek-Updater.zip'), 'Optimal', $false)
 
 $ende = $start + 1

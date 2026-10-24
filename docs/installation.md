@@ -20,6 +20,9 @@ immer schließen.
 1. Unter [Releases](https://github.com/spstiger/Kinco-HMI-DTools-free-spstiger-components/releases/latest)
    **`spstiger-Bibliothek-Updater.zip`** herunterladen und an einen festen Ort entpacken
    (z. B. `Dokumente\spstiger`).
+   Tipp: Die ZIP-Datei **vor dem Entpacken** per Rechtsklick → **Eigenschaften** öffnen, unten bei
+   „Sicherheit“ den Haken **Zulassen** setzen und mit **OK** bestätigen. Dann fragt Windows beim
+   Start nicht nach (siehe [Windows-Warnung](#windows-warnung-herausgeber-konnte-nicht-verifiziert-werden)).
 2. DTools schließen.
 3. **`spstiger-Bibliothek-aktualisieren.cmd`** doppelklicken.
 
@@ -31,7 +34,9 @@ Das Skript
 - ersetzt auch alte Kopien aus früheren ZIP-Downloads (z. B. Ordner `…-main`),
 - lässt Ordner in Ruhe, die per Git oder Junction eingebunden sind (siehe Weg C).
 
-Für spätere Updates das Skript einfach erneut starten. Ist schon alles aktuell, ändert es nichts.
+Für spätere Updates das Skript einfach erneut starten – **den Updater nicht neu herunterladen**.
+Er lädt bei jedem Start selbst die neueste Bibliothek von GitHub. Ist schon alles aktuell, ändert er
+nichts. Die beiliegende `LIESMICH.txt` fasst das für Kunden zusammen.
 
 Optionen (an die `.cmd` anhängen oder in PowerShell an `Update-spstigerBibliothek.ps1`):
 
@@ -79,10 +84,23 @@ Der Klon enthält zusätzlich Beispielprojekt und Anleitungen; DTools ignoriert 
 
 ![Eigene Komponenten in DTools](bilder/dtools-eigene-komponenten.png)
 
+## Windows-Warnung „Herausgeber konnte nicht verifiziert werden“
+
+Windows markiert jede Datei aus dem Internet. Ist sie nicht digital signiert, fragt Windows vor dem
+Start nach und zeigt „Unbekannter Herausgeber“. Das Update-Skript ist nicht signiert, darum erscheint
+die Warnung.
+
+- **Einmalig zulassen:** im Dialog auf **Ausführen** klicken.
+- **Vermeiden:** die heruntergeladene ZIP **vor dem Entpacken** per Rechtsklick → **Eigenschaften**
+  öffnen, unten bei „Sicherheit“ **Zulassen** anhaken, **OK**, dann entpacken.
+- **Schon entpackt:** dasselbe bei `spstiger-Bibliothek-aktualisieren.cmd` und
+  `Update-spstigerBibliothek.ps1` machen.
+
 ## Probleme
 
 | Meldung / Verhalten | Abhilfe |
 |---|---|
+| „Herausgeber konnte nicht verifiziert werden“ | Siehe [Windows-Warnung](#windows-warnung-herausgeber-konnte-nicht-verifiziert-werden) |
 | „Kinco DTools ist geöffnet“ | DTools schließen, Skript erneut starten |
 | „Keine Schreibrechte …“ | `.cmd` per Rechtsklick → **Als Administrator ausführen** |
 | Skript startet nicht / wird blockiert | Die Firmen-IT erlaubt evtl. keine PowerShell-Skripte → Weg B |

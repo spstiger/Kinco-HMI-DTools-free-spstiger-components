@@ -1,162 +1,68 @@
-# Sammlung nützlicher freier Kinco DTools Komponenten von spstiger
+# Kostenlose Kinco-DTools-Komponenten von spstiger
 
-Hier folgt die Erklärung
+Eine Bibliothek fertiger Komponenten für **Kinco DTools V4** (MK-, GT-, GL- und G-Serie),
+die ihr per Rechtsklick in eure HMI-Projekte einfügen könnt.
 
-- Screenshots Projekt und Komponenten
+![Speicheranzeigen RAM und Flash](docs/bilder/speicheranzeige-uebersicht.png)
 
-- Variablen erklärt
+## Enthaltene Komponenten
 
-- Aufbau Balkendiagramm erklärt - RAM und Flash
+| Komponente | Zweck | Doku |
+|---|---|---|
+| `ram_64`, `ram_128`, `ram_256` | RAM-Auslastung (Benutzer / System / frei) für 64, 128 oder 256 MB | [Speicheranzeige](docs/speicheranzeige.md) |
+| `flash_128`, `flash_256` | Freier Flash-Speicher für 128 oder 256 MB | [Speicheranzeige](docs/speicheranzeige.md) |
+| `brightness` | Display-Helligkeit per Schieberegler und Tasten | – |
+| `spstiger Logo` | spstiger-Logo als Bild | – |
+| `screen_saver_logo` | Bewegtes Logo für einen Bildschirmschoner (Moving + Timer) | – |
 
-- Import der Bibliothek erklärt
+Aktuelle Version: siehe [VERSION](VERSION), Änderungen im [CHANGELOG](CHANGELOG.md).
 
-## Komponente – Speicherauslastung (RAM / Flash)
+## Installieren und aktualisieren
 
-Diese Komponente visualisiert die Speicherauslastung (RAM und Flash) eines beliebigen Kinco-HMI-Geräts.  
-Das Beispiel wurde auf einem **MK070E** erstellt, ist aber auf andere Modelle übertragbar.
+**Empfohlen – Update-Skript (ohne Git):**
 
-### Aufbau
+1. Unter [Releases](https://github.com/spstiger/Kinco-HMI-DTools-free-spstiger-components/releases/latest)
+   die Datei **`spstiger-Bibliothek-Updater.zip`** herunterladen und entpacken.
+2. DTools schließen, dann **`spstiger-Bibliothek-aktualisieren.cmd`** doppelklicken.
+3. Das Skript installiert die neueste Version in **alle** DTools-V4-Installationen unter `C:\Kinco`
+   und sichert die vorherige Fassung. Für spätere Updates einfach erneut starten.
 
-Im **Fenster 0 (Hauptfenster)** werden fünf Elemente angezeigt, die die Speicherbelegung unterschiedlicher HMI-Modelle darstellen:
+Weitere Wege (ZIP von Hand, GitHub Desktop) und Hilfe bei Problemen: [docs/installation.md](docs/installation.md)
 
-- **RAM:** 64 MB, 128 MB, 256 MB
+In DTools: Rechtsklick auf eine freie Fläche → **Eigene Komponenten → Eigene Komponenten nutzen** →
+Bibliothek **spstiger-free-DTools-components** wählen.
 
-- **Flash:** 128 MB, 256 MB
+> **Wichtig:** Komponenten, die schon in einem Projekt eingefügt sind, ändern sich durch ein Update
+> nicht. Wer die neue Fassung möchte, fügt die Komponente neu ein.
 
-Jedes Element zeigt grafisch die Belegung des Speichers durch den Benutzer, das System und den noch freien Bereich.
+## Aufbau des Repositorys
 
-![](./assets/2025-10-08-092621-inage.png)
+```
+spstiger-free-DTools-components.pgl   Bibliothek ┐
+vg/  image/                           Grafiken   ┘ = Inhalt des Release-ZIPs (Ordner für usrlib)
+VERSION, CHANGELOG.md                 Version und Änderungen
+beispiele/SpeicherauslastungHMI/      Beispielprojekt (MK070E) mit allen Speicheranzeigen
+docs/                                 Anleitungen und Screenshots
+tools/                                Update-Skript für Kunden, Build-Skript für Releases
+.github/workflows/release.yml         Prüfung bei jedem Push, Release bei Tag vX.Y.Z
+```
 
----
+Die Bibliothek liegt bewusst im Hauptverzeichnis: So funktioniert auch ein Git-Klon direkt im
+`usrlib`-Ordner von DTools weiter.
 
-### Funktionsprinzip
+## Weitere Anleitungen
 
-#### 1. RAM-Anzeige
+- [Speicheranzeige RAM/Flash – Aufbau und Systemregister](docs/speicheranzeige.md)
+- [Eigene Komponentenbibliothek erstellen, exportieren, importieren](docs/eigene-bibliothek.md)
+- [Neue Version veröffentlichen (für spstiger)](docs/release.md)
 
-Beim Erstellen eines Projekts in Kinco DTools ist zu beachten, dass **Bilder, Tabellen, Schriftarten und grafische Komponenten** den verfügbaren **RAM-Speicher** beeinflussen.  
-Das HMI lädt beim Start alle benötigten Ressourcen in den Arbeitsspeicher,  
-um eine flüssige Darstellung und schnelle Reaktionszeit zu gewährleisten.
+## Lizenz
 
-Je mehr grafische Elemente oder große Bitmaps verwendet werden,  
-desto mehr RAM wird belegt – unabhängig von der Gerätegröße (z. B. 64 MB, 128 MB oder 256 MB).
-
-### Typische Speicherverbraucher:
-
-| Elementtyp                                     | Beschreibung                                                 | Einfluss auf RAM                                       |
-| ---------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------ |
-| **Bilder / Bitmaps**                           | Hintergründe, Icons, Logos, Farbverläufe                     | 🔺 Hoch – werden vollständig in den RAM geladen        |
-| **Tabellen / Data Tables**                     | enthalten Datensätze wie Rezepte oder Parameterlisten        | 🔺 Mittel bis Hoch                                     |
-| **Schriftarten (Fonts)**                       | jede neue Schriftart oder Größe belegt zusätzlichen Speicher | 🔺 Mittel                                              |
-| **Makros / Scripts**                           | Steuerlogik oder interne Abläufe                             | 🔺 Gering bis Mittel                                   |
-| **Balkendiagramme, Zeigerinstrumente, Trends** | grafische Elemente mit Animation oder Aktualisierung         | 🔺 Mittel                                              |
-| **Kommunikationsvariablen**                    | häufig aktualisierte Modbus-Register                         | 🔺 Gering, aber bei vielen summiert sich der Verbrauch |
-
-Für die Anzeige des benutzten und freien RAM-Speichers werden **Balkendiagramme** und **Zahlenkomponenten** mit **Systemvariablen** kombiniert.
-
-- **Benutzter RAM (User):**
-
-- **Systemregister:** LW9136
-
-![](./assets/2025-10-08-092622-inage.png)
-
-- - **Datentyp:** 2 Words (32 Bit ohne Vorzeichen)
-  
-  - **Ausrichtung:** *Rechts* (Balken wächst nach links)
-  
-  - **Wertebereich (Beispiel 64 MB):**
-    
-    - **Minimum:** 0
-    
-    - **Maximum:** 64 MB × 1024² = 67 108 864 Byte
-
-![](./assets/2025-10-08-092623-inage.png)
-
- Für andere Modelle:
-
-| RAM-Größe | Maximalwert (Bytes) |
-| --------- | ------------------- |
-| 64 MB     | 67 108 864          |
-| 128 MB    | 134 217 728         |
-| 256 MB    | 268 435 456         |
-
-- **Freier RAM:**
-  
-  - **Systemregister:** LW9134
-  
-  - **Datentyp:** 2 Words (32 Bit ohne Vorzeichen)
-  
-  - **Ausrichtung:** *Links* (Balken wächst nach rechts)
-
-![](./assets/2025-10-08-092624-inage.png)
-
-Beide Balkendiagramme werden **übereinander auf einer Bitmap-Komponente** platziert, die den vom System genutzten Speicherbereich darstellt.  
-So entsteht eine dreifarbige Gesamtanzeige:
-
-- **Orange:** vom Benutzer belegter RAM
-
-- **Blau:** vom System belegter RAM
-
-- **Grün:** freier RAM
-
-Zur besseren Lesbarkeit sind unterhalb des Diagramms **Zahlenkomponenten** angeordnet:
-
-- LW9136 → belegter RAM (User)
-
-- LW9134 → freier RAM
-
-#### Skalierung der Zahlenkomponenten
-
-Damit die Werte leicht ablesbar sind, werden die **Zahlenkomponenten skaliert**, um nicht die Byte-Zahl, sondern den **Speicher in Megabyte (MB)** darzustellen.
-
-- **Skalierung für 64 MB-Gerät:**
-  
-  - **Unterer Wert:** 0
-  
-  - **Oberer Grenzwert:** 64
-
-- **Skalierung für 128 MB-Gerät:**
-  
-  - **Unterer Wert:** 0
-  
-  - **Oberer Grenzwert:** 128
-
-- **Skalierung für 256 MB-Gerät:**
-  
-  - **Unterer Wert:** 0
-  
-  - **Oberer Grenzwert:** 256
-
-![](./assets/2025-10-08-092625-inage.png)
-
-Damit zeigen die Zahlenkomponenten den aktuellen RAM-Stand in **Megabyte** an – z. B. „27.4 MB frei“ oder „12.8 MB belegt“.
+[MIT](LICENSE) – frei nutzbar, auch in kommerziellen Projekten, ohne Gewähr. Bei Weitergabe der
+Bibliothek muss die Datei `LICENSE` beiliegen (im Release-ZIP ist sie enthalten).
 
 ---
 
-#### 2. Flash-Anzeige
-
-Im Gegensatz zum RAM hat der Flash **keinen eigenen Systemspeicheranteil**.  
-Das bedeutet: das Betriebssystem und die HMI-Runtime **nutzen den Flash nicht aktiv** während des laufenden Betriebs,  
-sondern nur zum **Speichern oder Laden von Dateien**.
-
-Der **freie Flashspeicher** wird über das **Systemregister LW9036** dargestellt.  
-Da Kinco-HMIs in der Regel nur **128 MB oder 256 MB Flash** besitzen, gibt es hier nur zwei Varianten.
-
-- **Zahlenkomponente:** zeigt verbleibenden Flashspeicher (in MB)
-
-- **Balkendiagramm:** visualisiert belegten Flashbereich
-  
-  - Liegt auf einer Bitmap-Komponente, die den gesamten Flash-Speicher symbolisiert
-
----
-
-### Hinweise zur Anpassung
-
-- Alle Adressen (LW9134, LW9136, LW9036) sind **systemweit gültig**.
-
-- Die Farben können nach Belieben im Balkendiagramm-Editor geändert werden
-
-## Eigene Komponentenbibliothek erstellen und verwenden
-
-So erstellt ihr eine eigene Komponentenbibliothek:
-
-[Anleitung zur Bibliothek](./bibliothek_export.md) 
+Fragen, Wünsche für neue Komponenten oder Hilfe bei eurem Kinco-HMI-Projekt:
+[spstiger.de](https://www.spstiger.de) – wir sind Kinco-Distributor und unterstützen bei Auswahl,
+Projektierung und Inbetriebnahme.

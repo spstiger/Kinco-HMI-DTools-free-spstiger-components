@@ -56,6 +56,11 @@ Die Bibliothek liegt bewusst im Hauptverzeichnis: So funktioniert auch ein Git-K
 - [Eigene Komponentenbibliothek erstellen, exportieren, importieren](docs/eigene-bibliothek.md)
 - [Neue Version veröffentlichen (für spstiger)](docs/release.md)
 
+## Lizenz
+
+[MIT](LICENSE) – frei nutzbar, auch in kommerziellen Projekten, ohne Gewähr. Bei Weitergabe der
+Bibliothek muss die Datei `LICENSE` beiliegen (im Release-ZIP ist sie enthalten).
+
 ---
 
 Fragen, Wünsche für neue Komponenten oder Hilfe bei eurem Kinco-HMI-Projekt:

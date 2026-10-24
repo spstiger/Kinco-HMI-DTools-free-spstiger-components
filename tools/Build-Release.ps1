@@ -66,13 +66,13 @@ $dist = Join-Path $root 'dist'
 if (Test-Path -LiteralPath $dist) { Remove-Item -LiteralPath $dist -Recurse -Force }
 $lib = Join-Path $dist "staging\$name"
 New-Item -ItemType Directory -Path $lib | Out-Null
-Copy-Item -LiteralPath $pgl, (Join-Path $root 'VERSION') -Destination $lib
+Copy-Item -LiteralPath $pgl, (Join-Path $root 'VERSION'), (Join-Path $root 'LICENSE') -Destination $lib
 Copy-Item -LiteralPath (Join-Path $root 'vg'), (Join-Path $root 'image') -Destination $lib -Recurse
 [IO.Compression.ZipFile]::CreateFromDirectory($lib, (Join-Path $dist "$name.zip"), 'Optimal', $true)
 
 $upd = Join-Path $dist 'staging\updater'
 New-Item -ItemType Directory -Path $upd | Out-Null
-Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Update-spstigerBibliothek.ps1'), (Join-Path $PSScriptRoot 'spstiger-Bibliothek-aktualisieren.cmd') -Destination $upd
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Update-spstigerBibliothek.ps1'), (Join-Path $PSScriptRoot 'spstiger-Bibliothek-aktualisieren.cmd'), (Join-Path $root 'LICENSE') -Destination $upd
 [IO.Compression.ZipFile]::CreateFromDirectory($upd, (Join-Path $dist 'spstiger-Bibliothek-Updater.zip'), 'Optimal', $false)
 
 $ende = $start + 1

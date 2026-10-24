@@ -175,6 +175,8 @@ try {
     }
     Schreibe 'Fertig. In DTools: Rechtsklick > Eigene Komponenten > Eigene Komponenten nutzen.' 'Green'
     Schreibe 'Hinweis: Schon eingefügte Komponenten in bestehenden Projekten ändern sich nicht.'
+    Schreibe ''
+    Schreibe 'Für künftige Updates dieses Skript einfach erneut starten – es holt immer die neueste Version.' 'Cyan'
     exit 0
 }
 catch {

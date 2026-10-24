@@ -14,6 +14,14 @@ Am einfachsten arbeitet man direkt im Git-Klon im `usrlib`-Ordner
 
 Komponentennamen nicht nachträglich umbenennen – Kunden suchen sie unter dem bekannten Namen.
 
+## Beispielprojekt öffnen
+
+Wer das Beispiel unter `beispiele/` in DTools öffnet, sieht danach Änderungen an
+`SpeicherauslastungHMI.dpj` und `PLCGEDefaultProperties.xml` – DTools schreibt beide schon beim
+Öffnen neu. Nur angesehen oder getestet → **verwerfen**. Bewusst geändert und gespeichert → alle
+geänderten Projektdateien zusammen committen. Details:
+[beispiele/SpeicherauslastungHMI/README.md](../beispiele/SpeicherauslastungHMI/README.md#änderungen-durch-bloßes-öffnen)
+
 ## Version erhöhen
 
 In [`VERSION`](../VERSION) die Versionsnummer setzen:

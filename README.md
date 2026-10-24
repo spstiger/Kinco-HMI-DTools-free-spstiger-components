@@ -25,7 +25,12 @@ Aktuelle Version: siehe [VERSION](VERSION), Änderungen im [CHANGELOG](CHANGELOG
    die Datei **`spstiger-Bibliothek-Updater.zip`** herunterladen und entpacken.
 2. DTools schließen, dann **`spstiger-Bibliothek-aktualisieren.cmd`** doppelklicken.
 3. Das Skript installiert die neueste Version in **alle** DTools-V4-Installationen unter `C:\Kinco`
-   und sichert die vorherige Fassung. Für spätere Updates einfach erneut starten.
+   und sichert die vorherige Fassung. Für spätere Updates einfach erneut starten – es holt selbst
+   die neueste Version, der Updater muss nicht neu heruntergeladen werden.
+
+Windows fragt beim Start nach, weil das Skript nicht signiert ist. Vermeiden lässt sich das, indem
+man die ZIP vor dem Entpacken unter **Eigenschaften → Zulassen** freigibt
+([Details](docs/installation.md#windows-warnung-herausgeber-konnte-nicht-verifiziert-werden)).
 
 Weitere Wege (ZIP von Hand, GitHub Desktop) und Hilfe bei Problemen: [docs/installation.md](docs/installation.md)
 

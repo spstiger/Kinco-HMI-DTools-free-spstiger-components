@@ -13,8 +13,9 @@ frw*.frp
 macro/
 submacro/
 
-# Release-Build (lokal)
+# Release-Build und Generator (lokal)
 dist/
+__pycache__/
 
 # Windows
 Thumbs.db

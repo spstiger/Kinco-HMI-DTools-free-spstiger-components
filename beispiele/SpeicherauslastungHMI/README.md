@@ -9,4 +9,19 @@ umstellen und die passende Anzeige für die Speichergröße des Geräts behalten
 Beim Öffnen, Speichern und Kompilieren legt DTools `temp/`, `tar/`, `.bak` und `.pkgx` an. Diese
 Dateien sind per `.gitignore` ausgeschlossen und gehören nicht ins Repository.
 
+## Änderungen durch bloßes Öffnen
+
+Schon beim Öffnen schreibt DTools zwei Dateien neu, auch wenn man nichts ändert:
+
+- `SpeicherauslastungHMI.dpj` – wird unverschlüsselt gespeichert (vorher verschlüsselt)
+- `PLCGEDefaultProperties.xml` – Standardvorlagen für neue Elemente werden durch die der
+  DTools-Installation ersetzt (meist leer); wirkt nicht auf vorhandene Elemente oder das HMI
+
+Regel für Git:
+
+- **Nur angesehen oder getestet** → Änderungen verwerfen
+  (GitHub Desktop: Rechtsklick → **Discard changes**).
+- **Bewusst etwas geändert und gespeichert** → alles zusammen committen: `.dpj`, geänderte
+  `HMI0/*.whe`, `PLCGEDefaultProperties.xml` und neue Grafiken in `image/` bzw. `vg/`.
+
 Aufbau und Systemregister: [docs/speicheranzeige.md](../../docs/speicheranzeige.md)
